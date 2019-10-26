@@ -6,8 +6,6 @@ import Navigator from "./navigator/Navigator";
 
 const fetchFonts = () =>
   Font.loadAsync({
-    Roboto: require("native-base/Fonts/Roboto.ttf"),
-    Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
     "Roboto-bold": require("./assets/fonts/Roboto-Bold.ttf"),
     ...Ionicons.font
   });

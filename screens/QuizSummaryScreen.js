@@ -2,9 +2,10 @@ import React from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
 
 const QuizSummaryScreen = props => {
+  const calories = props.navigation.getParam("calories");
   return (
     <View style={styles.screen}>
-      <Text>QuizSummaryScreen</Text>
+      <Text>YOU HAVE {calories} CALORIES</Text>
       <Button
         title="To Shopping"
         onPress={() => {
