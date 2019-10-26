@@ -2,17 +2,17 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { Container, Button, Text, Content } from "native-base";
 import CountdownTimer from "../components/Countdown";
-
+import Quiz from "../components/Quiz";
 import { quizData } from "../quizData/quizData";
 
 const QuizScreen = props => {
   const [quizReady, setQuizReady] = useState(false);
 
   return (
-    <Container>
-      <View style={styles.screen}>
+    <Container style={{ width: "100%" }}>
+      <Content contentContainerStyle={styles.screen}>
         {quizReady ? (
-          <Text>Im a quiz</Text>
+          <Quiz />
         ) : (
           <CountdownTimer
             size={200}
@@ -20,7 +20,7 @@ const QuizScreen = props => {
             onFinishCountdown={() => setQuizReady(true)}
           />
         )}
-      </View>
+      </Content>
     </Container>
   );
 };
@@ -29,7 +29,8 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    width: "100%"
   }
 });
 
