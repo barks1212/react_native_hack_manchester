@@ -15,11 +15,6 @@ const QuizSummaryScreen = props => {
   );
 };
 
-QuizSummaryScreen.navigationOptions = {
-  headerTitle: "Quiz Summary",
-  headerLeft: null
-};
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,

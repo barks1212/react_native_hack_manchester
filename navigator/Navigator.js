@@ -10,12 +10,19 @@ import {
   ShoppingSummaryScreen
 } from "../screens";
 
-const Navigator = createStackNavigator({
-  Home: HomeScreen,
-  Quiz: QuizScreen,
-  QuizSummary: QuizSummaryScreen,
-  Shopping: ShoppingScreen,
-  ShoppingSummary: ShoppingSummaryScreen
-});
+const Navigator = createStackNavigator(
+  {
+    Home: HomeScreen,
+    Quiz: QuizScreen,
+    QuizSummary: QuizSummaryScreen,
+    Shopping: ShoppingScreen,
+    ShoppingSummary: ShoppingSummaryScreen
+  },
+  {
+    defaultNavigationOptions: {
+      headerShown: false
+    }
+  }
+);
 
 export default createAppContainer(Navigator);
