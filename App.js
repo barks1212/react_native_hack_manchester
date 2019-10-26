@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
-import { Container, Text } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
+import Navigator from "./navigator/Navigator";
 
 const fetchFonts = () =>
   Font.loadAsync({
@@ -20,9 +20,5 @@ export default function App() {
     );
   }
 
-  return (
-    <Container>
-      <Text>Open up App.js to start working on your app!</Text>
-    </Container>
-  );
+  return <Navigator />;
 }
