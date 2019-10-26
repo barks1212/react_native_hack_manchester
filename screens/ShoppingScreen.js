@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { Text, View, TouchableOpacity, StyleSheet, Button, Image, Alert } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import debounce from 'lodash/debounce'
@@ -37,6 +37,23 @@ const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback,
 
 const takePhoto = (photo) => {
   console.log('---------- PHOTO ---------------', photo)
+
+  axios.post('https://supermarketsweep.azurewebsites.net/game/photo',
+    {
+      gameId: "26216fe8-ad2e-42bc-820c-988c2a915a78",
+      base64: photo,
+    })
+    .then((response) => {
+
+      if (response.data) {
+        console.log('------ send photo response ---------', response.data)
+
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+
 }
 
 const getCameraPermissions = async (setCameraPermissionCallback) => {
@@ -64,6 +81,7 @@ export default ShoppingScreen = () => {
       {hasCameraPermission === null && <View />}
       {hasCameraPermission === false && <Text>No access to camera</Text>}
       {hasCameraPermission &&
+
         <View style={{ flex: 1 }}>
           <Camera ref={camera}
             style={{ flex: 1 }} type={type}
@@ -76,6 +94,8 @@ export default ShoppingScreen = () => {
                 flex: 1,
                 backgroundColor: 'transparent',
                 flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
               }}>
               <TouchableOpacity
                 style={{
@@ -83,19 +103,40 @@ export default ShoppingScreen = () => {
                   alignSelf: 'flex-end',
                   alignItems: 'center',
                 }}
-                onPress={async () => {
-
-                  if (camera) {
-                    let photo = await camera.current.takePictureAsync();
-                    takePhoto(photo)
-                  }
-
-                }}>
+              >
                 {displayProduct &&
                   // <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> {scannedProduct.productName}, {scannedProduct.calories}  </Text>
-                  <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> {'hi there shit goes herefdfddfdsfsfdsfdsfdsff'}  </Text>
+                  <Image style={{ width: 300, height: 300, justifyContent: 'center', alignItems: 'center', borderRadius: '50%' }}
+                    source={{ uri: `${scannedProduct.imageUrl}` }} />
+                  // <Image style={{ width: 50, height: 50 }} source={{ uri: scannedProduct.imageUrl }} />
+                  // <Text style={{ fontSize: 18, marginLeft: 5, marginBottom: 10, color: 'white' }}> {'hi there shit goes herefdfddfdsfsfdsfdsfdsff'}  </Text>
+
                 }
-                <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Take Photo </Text>
+
+                <Button title='Take Photo'
+                  color="orange"
+                  accessibilityLabel="Take a photo"
+                  onPress={async () => {
+
+                    if (camera) {
+                      let photo = await camera.current.takePictureAsync({
+                        base64: true,
+                        quality: 0.5
+                      });
+                      takePhoto(photo)
+
+                    }
+
+                  }}
+                // onPress={() => {
+                //   Alert.alert('You have taken a photo!');
+                //   // takePhoto(photo)
+                // }}>
+                >
+                </Button>
+
+
+                {/* <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Take Photo </Text> */}
               </TouchableOpacity>
             </View>
           </Camera>
