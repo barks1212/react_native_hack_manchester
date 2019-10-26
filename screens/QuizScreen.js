@@ -1,17 +1,22 @@
 import React from "react";
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, StyleSheet } from "react-native";
+import { Container, Button, Text, Content } from "native-base";
+
+import { quizData } from "../quizData/quizData";
 
 const QuizScreen = props => {
   return (
-    <View style={styles.screen}>
-      <Text>QuizScreen</Text>
-      <Button
-        title="To Quiz Summary"
-        onPress={() => {
-          props.navigation.navigate("QuizSummary");
-        }}
-      />
-    </View>
+    <Container>
+      <View style={styles.screen}>
+        <Text>QuizScreen</Text>
+        <Button
+          title="To Quiz Summary"
+          onPress={() => {
+            props.navigation.navigate("QuizSummary");
+          }}
+        />
+      </View>
+    </Container>
   );
 };
 
