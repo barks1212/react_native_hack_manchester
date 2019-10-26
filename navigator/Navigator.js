@@ -4,6 +4,7 @@ import { createStackNavigator } from "react-navigation-stack";
 import { createAppContainer } from "react-navigation";
 import {
   HomeScreen,
+  QuizTimerScreen,
   QuizScreen,
   QuizSummaryScreen,
   ShoppingScreen,
@@ -13,6 +14,7 @@ import {
 const Navigator = createStackNavigator(
   {
     Home: HomeScreen,
+    QuizTimer: QuizTimerScreen,
     Quiz: QuizScreen,
     QuizSummary: QuizSummaryScreen,
     Shopping: ShoppingScreen,

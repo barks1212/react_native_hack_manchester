@@ -11,7 +11,7 @@ const HomeScreen = props => {
         <Button
           title="New Game"
           onPress={() => {
-            props.navigation.navigate("Quiz");
+            props.navigation.navigate("QuizTimer");
           }}
         />
       </View>

@@ -1,5 +1,4 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
 import CountDown from "react-native-countdown-component";
 
 const CountdownTimer = props => {
