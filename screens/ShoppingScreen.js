@@ -16,6 +16,7 @@ import debounce from "lodash/debounce";
 import get from "lodash/get";
 import axios from "axios";
 import CountDown from "react-native-countdown-component";
+import { Audio } from "expo-av";
 
 import BlinkView from "react-native-blink-view";
 
@@ -107,6 +108,21 @@ const getCameraPermissions = async setCameraPermissionCallback => {
   setCameraPermissionCallback(status === "granted");
 };
 
+const backgroundMusic = new Audio.Sound();
+
+const loadMusic = async () => {
+  try {
+    await backgroundMusic.loadAsync(require("../assets/sweepMusic.mp3"));
+    await backgroundMusic.setIsLoopingAsync(true);
+    await backgroundMusic.playAsync();
+
+    // Your sound is playing!
+  } catch (error) {
+    // An error occurred!
+    console.log(error);
+  }
+};
+
 export default ShoppingScreen = props => {
   const calories = props.navigation.getParam("calories");
   console.log(calories);
@@ -147,6 +163,12 @@ export default ShoppingScreen = props => {
 
   useEffect(() => {
     getCameraPermissions(setCameraPermission);
+
+    loadMusic();
+
+    return () => {
+      backgroundMusic.stopAsync();
+    };
   }, []);
 
   return (
@@ -186,7 +208,8 @@ export default ShoppingScreen = props => {
                 until={timeLeft}
                 onFinish={() => {
                   console.log("props: ", props);
-                  props.navigation.navigate("ShoppingSummary");
+
+                  props.navigation.replace("ShoppingSummary");
                 }}
                 // onFinish={() => props.navigation.navigate("Shopping Summary")}
 
