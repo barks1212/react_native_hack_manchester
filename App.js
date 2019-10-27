@@ -17,6 +17,17 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 const fetchFonts = () =>
   Font.loadAsync({
     "Roboto-bold": require("./assets/fonts/Roboto-Bold.ttf"),
+    Caviar: require("./assets/fonts/CaviarDreams.ttf"),
+    "Caviar-italic": require("./assets/fonts/CaviarDreams_Italic.ttf"),
+    "Caviar-bold": require("./assets/fonts/Caviar_Dreams_Bold.ttf"),
+    Seaside: require("./assets/fonts/SEASRN__.ttf"),
+    Raleway: require("./assets/fonts/Raleway-Regular.ttf"),
+    "Raleway-italic": require("./assets/fonts/Raleway-Italic.ttf"),
+    "Raleway-light": require("./assets/fonts/Raleway-Light.ttf"),
+    "Raleway-light-italic": require("./assets/fonts/Raleway-LightItalic.ttf"),
+    "Raleway-medium": require("./assets/fonts/Raleway-Medium.ttf"),
+    "Raleway-bold": require("./assets/fonts/Raleway-Bold.ttf"),
+    "Raleway-extra-bold": require("./assets/fonts/Raleway-ExtraBold.ttf"),
     ...Ionicons.font
   });
 
