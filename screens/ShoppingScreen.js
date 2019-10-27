@@ -6,7 +6,9 @@ import debounce from 'lodash/debounce'
 import axios from 'axios'
 import CountDown from 'react-native-countdown-component'
 
-const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback, setCalCallback, setDisplayProduct) => {
+import BlinkView from 'react-native-blink-view'
+
+const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback, setCalCallback, setDisplayProduct, setIsDonationCb) => {
   console.log('--------------- SCANNED ----------------', scan)
   setDebounceScanCallback(true)
 
@@ -14,7 +16,7 @@ const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback,
 
   axios.post('https://supermarketsweep.azurewebsites.net/game/scan',
     {
-      gameId: "d623874a-f0fa-418c-b531-37b6318d7a58",
+      gameId: "ea626bbd-4604-427f-a4eb-0391178157af",
       gtin: `${scan.data}`,
     })
     .then((response) => {
@@ -25,9 +27,22 @@ const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback,
         setCalCallback(response.data.caloriesLeft)
         console.log('I set product info')
         setDisplayProduct(true)
+        // response.data.isDonation && setIsDonationCb(true)
+        setIsDonationCb(true)
+        //
         console.log('I set display to true')
         setTimeout(() => {
+          //   let blinker = false
+
+          //   setInterval(() => {
+          //     console.log('blinker', blinker)
+          //     blinker = !blinker
+          //     setIsDonationCb(blinker);
+          //     ///
+          //   }, 500)
+
           setDisplayProduct(false)
+          setIsDonationCb(false)
           console.log('I set display to false')
         }, 3000)
       }
@@ -42,7 +57,7 @@ const takePhoto = (photo, setScannedBonusCb, setDisplayBonusCb, setCalsLeftCb) =
 
   axios.post('https://supermarketsweep.azurewebsites.net/game/photo',
     {
-      gameId: "d623874a-f0fa-418c-b531-37b6318d7a58",
+      gameId: "ea626bbd-4604-427f-a4eb-0391178157af",
       base64Image: photo.base64,
     })
     .then((response) => {
@@ -72,7 +87,7 @@ const getCameraPermissions = async (setCameraPermissionCallback) => {
   setCameraPermissionCallback(status === 'granted')
 }
 
-export default ShoppingScreen = () => {
+export default ShoppingScreen = (props) => {
 
   const type = Camera.Constants.Type.back
   const [hasCameraPermission, setCameraPermission] = useState()
@@ -80,10 +95,36 @@ export default ShoppingScreen = () => {
   const [scannedProduct, setScannedProduct] = useState({})
   const [displayProduct, setDisplayProduct] = useState(false)
   const [debounceScan, setDebounceScan] = useState(false)
-  const [timeLeft, setTimeLeft] = useState(300)
-  const [calsLeft, setCalsLeft] = useState(2000)
+  const [timeLeft, setTimeLeft] = useState(100)
+  const [calsLeft, setCalsLeft] = useState()
   const [displayBonus, setDisplayBonus] = useState(false)
   const [scannedBonus, setScannedBonus] = useState()
+  const [donation, setIsDonation] = useState(false)
+  // const [isGameOver, setIsGameOver] = useState(false)
+  //
+
+  const onGameOver = (props) => {
+    console.log('game over')
+    props.navigation.navigate("Shopping Summary")
+  }
+  // useEffect(() => {
+  //   props.navigation.popToTop()
+  // },[isGameOver])
+
+  const donationMessage = () => {
+    const messages = [
+      'You Rock!',
+      'Flawless Victory!',
+      'Hadooken!',
+      'Yoga Flame!',
+      'You Done Good!',
+      'You just fed an empty belleeeeh!',
+      'A divine entity says - Nice Work']
+
+    return messages[Math.floor(Math.random() * messages.length)]
+  }
+
+
 
   const camera = useRef()
 
@@ -115,13 +156,14 @@ export default ShoppingScreen = () => {
             style={{ flex: 1 }} type={type}
             onBarCodeScanned={scan => {
               console.log('SCANNER DEBOUNCED?', debounceScan)
-              if (!debounceScan) handleBarCodeScanned(scan, setDebounceScan, setScannedProduct, setCalsLeft, setDisplayProduct)
+              if (!debounceScan) handleBarCodeScanned(scan, setDebounceScan, setScannedProduct, setCalsLeft, setDisplayProduct, setIsDonation)
             }} >
 
             <CountDown
               until={timeLeft}
-              onFinish={() => alert('finished')}
-              onPress={() => alert('hello')}
+              onFinish={() => onGameOver(props)}
+              // onFinish={() => props.navigation.navigate("Shopping Summary")}
+
               size={15}
               timeToShow={['M', 'S']}
             />
@@ -149,7 +191,11 @@ export default ShoppingScreen = () => {
                   <Image style={{ width: 300, height: 300, justifyContent: 'center', alignItems: 'center', borderRadius: 150 }}
                     source={{ uri: `${scannedProduct.imageUrl}` }} />
 
-
+                }
+                {donation &&
+                  <BlinkView delay={250}>
+                    <Text style={styles.calsAndTimerText}>{donationMessage()}</Text>
+                  </BlinkView>
                 }
 
                 {displayBonus &&
@@ -207,7 +253,7 @@ const styles = StyleSheet.create({
   calsAndTimerText: {
     color: 'white',
     marginTop: 0,
-    textAlign: 'center'
+    textAlign: 'center',
   },
 
   takePhotoButton: {

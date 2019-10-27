@@ -8,7 +8,7 @@ const QuizScreen = props => {
       <Button
         title="To Quiz Summary"
         onPress={() => {
-          props.navigation.navigate("QuizSummary");
+          props.navigation.navigate("QuizSummary")
         }}
       />
     </View>
