@@ -14,6 +14,7 @@ import { Camera } from "expo-camera";
 import debounce from "lodash/debounce";
 import axios from "axios";
 import CountDown from "react-native-countdown-component";
+import { Audio } from 'expo-av';
 
 import BlinkView from "react-native-blink-view";
 
@@ -62,7 +63,7 @@ const handleBarCodeScanned = (
         }, 3000);
       }
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
     });
 };
@@ -95,7 +96,7 @@ const takePhoto = (
         setCalsLeftCb(response.data.caloriesLeft);
       }
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
     });
 };
@@ -104,6 +105,24 @@ const getCameraPermissions = async setCameraPermissionCallback => {
   const { status } = await Permissions.askAsync(Permissions.CAMERA);
   setCameraPermissionCallback(status === "granted");
 };
+
+const backgroundMusic = new Audio.Sound();
+
+const loadMusic = async () => {
+  try {
+
+    await backgroundMusic.loadAsync(
+      require("../assets/sweepMusic.mp3")
+    );
+    await backgroundMusic.setIsLoopingAsync(true);
+    await backgroundMusic.playAsync();
+
+    // Your sound is playing!
+  } catch (error) {
+    // An error occurred!
+    console.log(error)
+  }
+}
 
 export default ShoppingScreen = props => {
   const type = Camera.Constants.Type.back;
@@ -146,6 +165,11 @@ export default ShoppingScreen = props => {
 
   useEffect(() => {
     getCameraPermissions(setCameraPermission);
+
+    loadMusic()
+
+
+    return () => backgroundMusic.stopAsync()
   }, []);
 
   return (
