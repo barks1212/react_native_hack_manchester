@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   title: {
-    fontFamily: "Roboto-bold",
+    fontFamily: "Caviar-bold",
     fontSize: 20,
     textAlign: "center"
   }
