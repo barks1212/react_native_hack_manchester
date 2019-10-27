@@ -4,8 +4,9 @@ import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import debounce from 'lodash/debounce'
 import axios from 'axios'
+import CountDown from 'react-native-countdown-component'
 
-const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback, setDisplayProduct) => {
+const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback, setCalCallback, setDisplayProduct) => {
   console.log('--------------- SCANNED ----------------', scan)
   setDebounceScanCallback(true)
 
@@ -13,7 +14,7 @@ const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback,
 
   axios.post('https://supermarketsweep.azurewebsites.net/game/scan',
     {
-      gameId: "26216fe8-ad2e-42bc-820c-988c2a915a78",
+      gameId: "d623874a-f0fa-418c-b531-37b6318d7a58",
       gtin: `${scan.data}`,
     })
     .then((response) => {
@@ -21,6 +22,7 @@ const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback,
       if (response.data) {
         console.log('------ product scan response ---------', response.data)
         setProductCallback(response.data)
+        setCalCallback(response.data.caloriesLeft)
         console.log('I set product info')
         setDisplayProduct(true)
         console.log('I set display to true')
@@ -40,8 +42,8 @@ const takePhoto = (photo) => {
 
   axios.post('https://supermarketsweep.azurewebsites.net/game/photo',
     {
-      gameId: "26216fe8-ad2e-42bc-820c-988c2a915a78",
-      base64: photo,
+      gameId: "d623874a-f0fa-418c-b531-37b6318d7a58",
+      base64Image: photo.base64,
     })
     .then((response) => {
 
@@ -69,12 +71,14 @@ export default ShoppingScreen = () => {
   const [scannedProduct, setScannedProduct] = useState({})
   const [displayProduct, setDisplayProduct] = useState(false)
   const [debounceScan, setDebounceScan] = useState(false)
-
+  const [timeLeft, setTimeLeft] = useState(300)
+  const [calsLeft, setCalsLeft] = useState(2000)
   const camera = useRef()
 
   useEffect(() => {
     getCameraPermissions(setCameraPermission)
   }, [])
+
 
   return (
     <>
@@ -82,13 +86,34 @@ export default ShoppingScreen = () => {
       {hasCameraPermission === false && <Text>No access to camera</Text>}
       {hasCameraPermission &&
 
+
+
         <View style={{ flex: 1 }}>
+
+          {/* <CountDown
+            until={timeLeft}
+            onFinish={() => alert('finished')}
+            onPress={() => alert('hello')}
+            size={15}
+            timeToShow={['M', 'S']}
+          /> */}
+
+
           <Camera ref={camera}
             style={{ flex: 1 }} type={type}
             onBarCodeScanned={scan => {
               console.log('SCANNER DEBOUNCED?', debounceScan)
-              if (!debounceScan) handleBarCodeScanned(scan, setDebounceScan, setScannedProduct, setDisplayProduct)
+              if (!debounceScan) handleBarCodeScanned(scan, setDebounceScan, setScannedProduct, setCalsLeft, setDisplayProduct)
             }} >
+
+            <CountDown
+              until={timeLeft}
+              onFinish={() => alert('finished')}
+              onPress={() => alert('hello')}
+              size={15}
+              timeToShow={['M', 'S']}
+            />
+            <Text style={styles.calsAndTimerText}> Calories left: {calsLeft} </Text>
             <View
               style={{
                 flex: 1,
@@ -97,6 +122,9 @@ export default ShoppingScreen = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
               }}>
+
+              {/* <Text style={styles.calsAndTimerText}> Time left: {count} </Text> */}
+
               <TouchableOpacity
                 style={{
                   flex: 0.1,
@@ -105,42 +133,33 @@ export default ShoppingScreen = () => {
                 }}
               >
                 {displayProduct &&
-                  // <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> {scannedProduct.productName}, {scannedProduct.calories}  </Text>
-                  <Image style={{ width: 300, height: 300, justifyContent: 'center', alignItems: 'center', borderRadius: '50%' }}
+
+                  <Image style={{ width: 300, height: 300, justifyContent: 'center', alignItems: 'center', borderRadius: 150 }}
                     source={{ uri: `${scannedProduct.imageUrl}` }} />
-                  // <Image style={{ width: 50, height: 50 }} source={{ uri: scannedProduct.imageUrl }} />
-                  // <Text style={{ fontSize: 18, marginLeft: 5, marginBottom: 10, color: 'white' }}> {'hi there shit goes herefdfddfdsfsfdsfdsfdsff'}  </Text>
+
 
                 }
-
-                <Button title='Take Photo'
-                  color="orange"
-                  accessibilityLabel="Take a photo"
-                  onPress={async () => {
-
-                    if (camera) {
-                      let photo = await camera.current.takePictureAsync({
-                        base64: true,
-                        quality: 0.5
-                      });
-                      takePhoto(photo)
-
-                    }
-
-                  }}
-                // onPress={() => {
-                //   Alert.alert('You have taken a photo!');
-                //   // takePhoto(photo)
-                // }}>
-                >
-                </Button>
-
+                <View style={styles.takePhotoButton}>
+                  <Button title='Take Photo'
+                    color="white"
+                    accessibilityLabel="Take a photo"
+                    onPress={async () => {
+                      if (camera) {
+                        let photo = await camera.current.takePictureAsync({
+                          base64: true,
+                          quality: 0.1
+                        });
+                        takePhoto(photo)
+                      }
+                    }}
+                  >
+                  </Button>
+                </View>
 
                 {/* <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Take Photo </Text> */}
               </TouchableOpacity>
             </View>
           </Camera>
-
 
           {
             scanned && (
@@ -153,130 +172,7 @@ export default ShoppingScreen = () => {
   )
 }
 
-// export default class ShoppingScreen extends React.Component {
 
-//   constructor(props) {
-//     super(props)
-
-//     this.handleBarCodeScanned = this.handleBarCodeScanned.bind(this)
-
-//     this.state = {
-//       hasCameraPermission: null,
-//       type: Camera.Constants.Type.back,
-//       scanned: false,
-//       basket: {},
-//       scannedProduct: {},
-//       displayProduct: false
-//     };
-//   }
-
-
-//   async componentDidMount() {
-//     const { status } = await Permissions.askAsync(Permissions.CAMERA)
-//     this.setState({ hasCameraPermission: status === 'granted' })
-//   }
-
-//   componentDidUpdate(prevProps, prevState) {
-
-//     const { scannedProduct } = this.state
-//     if (prevState.scannedProduct !== this.state.scannedProduct) {
-//       this.setState({ displayProduct: true })
-//       setTimeout(() => this.setState({ displayProduct: false }), 1000)
-//     }
-//   }
-
-//   handleBarCodeResponse = (response, setState) => {
-//     // handle success
-//     const { data } = response
-
-//     if (data)
-//       setState({ scannedProduct: data })
-
-//   }
-//   handleBarCodeScanned = ({ type, data }) => {
-//     this.setState({ scanned: true });
-
-//     axios.post('https://supermarketsweep.azurewebsites.net/game/scan',
-//       {
-//         gtin: `${data}`,
-
-//       }
-//     )
-//       .then((response) => handleBarCodeResponse(response, this.setState))
-//       .catch(function (error) {
-//         // handle error
-//         console.log(error);
-//       })
-//       .finally(function () {
-//         // always executed
-//       });
-
-
-//   };
-
-//   takePhoto = ({ uri, width, height, exif, base64 }) => {
-//     alert(`Photo take ${uri}, ${width}, ${height}`)
-//   }
-
-
-//   render() {
-//     const { hasCameraPermission, scanned, displayProduct, scannedProduct } = this.state;
-//     if (hasCameraPermission === null) {
-//       return <View />;
-//     } else if (hasCameraPermission === false) {
-//       return <Text>No access to camera</Text>;
-//     } else {
-//       return (
-
-
-//         <View style={{ flex: 1 }}>
-//           <Camera ref={ref => {
-//             this.camera = ref;
-//           }}
-//             style={{ flex: 1 }} type={this.state.type}
-//             onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned} >
-//             <View
-//               style={{
-//                 flex: 1,
-//                 backgroundColor: 'transparent',
-//                 flexDirection: 'row',
-//               }}>
-//               <TouchableOpacity
-//                 style={{
-//                   flex: 0.1,
-//                   alignSelf: 'flex-end',
-//                   alignItems: 'center',
-//                 }}
-//                 onPress={async () => {
-
-//                   if (this.camera) {
-//                     let photo = await this.camera.takePictureAsync();
-//                     this.takePhoto(photo)
-//                   }
-
-//                 }}>
-//                 {displayProduct &&
-//                   <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> {scannedProduct.productName}, {scannedProduct.calories}  </Text>
-//                 }
-//                 <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Take Photo </Text>
-//               </TouchableOpacity>
-//             </View>
-//           </Camera>
-//           {/* <BarCodeScanner
-//             barCodeTypes={[BarCodeScanner.Constants.BarCodeType.ean13, BarCodeScanner.Constants.BarCodeType.ean8]}
-//             onBarCodeScanned={scanned ? undefined : this.handleBarCodeScanned}
-//             style={StyleSheet.absoluteFillObject}
-//           /> */}
-
-//           {scanned && (
-//             <Button title={'Tap to Scan Again'} onPress={() => this.setState({ scanned: false })} />
-//           )}
-//         </View >
-
-//       );
-//     }
-//   }
-// } 
 
 ShoppingScreen.navigationOptions = {
   headerTitle: "Shopping",
@@ -288,6 +184,21 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+
+  calsAndTimerText: {
+    color: 'white',
+    marginTop: 0,
+    textAlign: 'center'
+  },
+
+  takePhotoButton: {
+    backgroundColor: '#5ad45a',
+    width: 100,
+    marginBottom: 50,
+    borderRadius: 75
   }
+
+
 });
 
