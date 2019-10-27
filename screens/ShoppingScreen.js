@@ -170,7 +170,9 @@ export default ShoppingScreen = props => {
     loadMusic()
 
 
-    return () => backgroundMusic.stopAsync()
+    return () => {
+      backgroundMusic.stopAsync()
+    }
   }, []);
 
   return (
@@ -209,7 +211,9 @@ export default ShoppingScreen = props => {
               until={timeLeft}
               onFinish={() => {
                 console.log('props: ', props)
-                props.navigation.navigate("ShoppingSummary");
+
+                props.navigation.replace("ShoppingSummary");
+
               }}
               // onFinish={() => props.navigation.navigate("Shopping Summary")}
 

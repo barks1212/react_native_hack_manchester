@@ -8,8 +8,8 @@ const getSummary = (gameId, setSummaryCb) => {
   if (!gameId)
     return
 
-  // axios.post(`https://supermarketsweep.azurewebsites.net/game/finishGame/${gameId}`,
-  axios.post(`https://supermarketsweep.azurewebsites.net/game/finishGame/b5c94b67-5f4b-4a25-a119-82aa3d4c3bae`,
+  axios.post(`https://supermarketsweep.azurewebsites.net/game/finishGame/${gameId}`,
+    // axios.post(`https://supermarketsweep.azurewebsites.net/game/finishGame/b5c94b67-5f4b-4a25-a119-82aa3d4c3bae`,
   )
     .then((response) => {
 
