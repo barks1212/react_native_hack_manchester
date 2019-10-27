@@ -36,25 +36,25 @@ const Question = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    // flex: 1,
     alignItems: "center",
     width: Dimensions.get("window").width,
     backgroundColor: "yellow"
   },
   questionWrapper: {
-    paddingVertical: 50,
+    marginTop: 50,
     paddingHorizontal: 30,
-    width: "100%",
+    width: "90%",
     justifyContent: "center",
-    height: 200,
+    minHeight: 150,
     backgroundColor: "green"
   },
   question: {
     fontFamily: "Roboto-bold",
     textAlign: "center",
-    fontSize: 25
+    fontSize: 22
   },
   answerContainer: {
+    marginTop: 30,
     flexDirection: "row",
     flexWrap: "wrap",
     backgroundColor: "purple",

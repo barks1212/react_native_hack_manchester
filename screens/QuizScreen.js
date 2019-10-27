@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import axios from "axios";
+import { useDispatch } from "react-redux";
 import { View, StyleSheet, Text } from "react-native";
 import CountdownTimer from "../components/Countdown";
 import Question from "../components/Question";
 import { quizData } from "../quizData/quizData";
+import { addGameId } from "../store/actions";
 
 const QuizScreen = props => {
-  const [quizReady, setQuizReady] = useState(false);
+  const dispatch = useDispatch();
+  const [gameId, setGameId] = useState();
   const [availableQuestions, setAvailableQuestions] = useState(
     quizData.map(x => x)
   );
@@ -32,22 +36,26 @@ const QuizScreen = props => {
     setAvailableQuestions(newQuestions);
   }, [index]);
 
+  const countdownFinishHandler = answerCount => {
+    const calorieCount = answerCount * 250;
+    dispatch(addGameId(calorieCount));
+    props.navigation.navigate("QuizSummary", { calories: calorieCount });
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "red" }}>
       <Question question={question} setAnswer={setAnswer} />
       <View style={styles.bottom}>
-        <View style={styles.count}>
+        <View>
           <Text style={styles.text}>{`${correctAnswersTotal *
             250} Calories`}</Text>
         </View>
         <View>
           <CountdownTimer
-            until={30}
+            until={200}
             size={35}
             onFinishCountdown={() =>
-              props.navigation.navigate("QuizSummary", {
-                calories: correctAnswersTotal * 250
-              })
+              countdownFinishHandler(correctAnswersTotal)
             }
           />
         </View>
@@ -59,15 +67,12 @@ const QuizScreen = props => {
 const styles = StyleSheet.create({
   bottom: {
     flexDirection: "row",
+    flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
     backgroundColor: "blue",
-    marginVertical: 30,
     paddingHorizontal: 20
-  },
-  count: {
-    flexDirection: "column"
   },
   text: {
     fontFamily: "Roboto-bold",
