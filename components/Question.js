@@ -57,12 +57,10 @@ const styles = StyleSheet.create({
     color: "white"
   },
   answerContainer: {
-    // marginTop: 30,
+    marginTop: 30,
     flexDirection: "row",
     flexWrap: "wrap",
-    width: "100%",
-    borderTopColor: "black",
-    borderTopWidth: 2
+    width: "100%"
   }
 });
 

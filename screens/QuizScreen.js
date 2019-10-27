@@ -64,7 +64,7 @@ const QuizScreen = props => {
           <View>
             <CountdownTimer
               until={60}
-              size={35}
+              size={60}
               onFinishCountdown={() =>
                 countdownFinishHandler(correctAnswersTotal)
               }
@@ -79,11 +79,13 @@ const QuizScreen = props => {
 const styles = StyleSheet.create({
   bottom: {
     flexDirection: "row",
-    flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
     width: "100%",
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderTopWidth: 2,
+    borderTopColor: "black"
   },
   bgImg: {
     width: Dimensions.get("window").width,
@@ -93,7 +95,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontFamily: "Caviar-bold",
-    fontSize: 22
+    fontSize: 30
   }
 });
 
