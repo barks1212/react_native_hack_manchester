@@ -24,6 +24,22 @@ const getSummary = (gameId, setSummaryCb) => {
     })
 }
 
+const onPurchase = (gameId) => {
+  console.log('hit purchase button: ', gameId)
+  // axios.post(`https://supermarketsweep.azurewebsites.net/game/purchase/${gameId}`,
+  axios.post(`https://supermarketsweep.azurewebsites.net/game/purchase/${gameId}`,
+
+  )
+    .then((response) => {
+      if (response.data) {
+        console.log('------ purchase response ---------', response.data)
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+}
+//
 const ShoppingSummaryScreen = props => {
   const [summary, setSummary] = useState()
   console.log('in summary screen')
@@ -70,19 +86,7 @@ const ShoppingSummaryScreen = props => {
       <Button
         title="Purchase"
         onPress={() => {
-          axios.post(`https://supermarketsweep.azurewebsites.net/game/purchase/${gameId}`,
-          )
-            .then((response) => {
-
-              if (response.data) {
-                console.log('------ purchase response ---------', response.data)
-              }
-
-
-            })
-            .catch(function (error) {
-              console.log(error);
-            })
+          onPurchase(gameId)
 
         }}
       />

@@ -115,7 +115,7 @@ export default ShoppingScreen = props => {
   const [scannedProduct, setScannedProduct] = useState({});
   const [displayProduct, setDisplayProduct] = useState(false);
   const [debounceScan, setDebounceScan] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(5);
+  const [timeLeft, setTimeLeft] = useState(45);
   const [calsLeft, setCalsLeft] = useState();
   const [displayBonus, setDisplayBonus] = useState(false);
   const [scannedBonus, setScannedBonus] = useState();
