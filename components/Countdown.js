@@ -4,12 +4,19 @@ import CountDown from "react-native-countdown-component";
 const CountdownTimer = props => {
   return (
     <CountDown
-      style={{ borderRadius: 100, overflow: "hidden", width: 80, height: 80 }}
+      style={{
+        borderRadius: 150,
+        overflow: "hidden",
+        width: 140,
+        height: 140,
+        borderWidth: 2,
+        borderColor: "black"
+      }}
       until={props.until}
       size={props.size}
       onFinish={props.onFinishCountdown}
-      digitStyle={{ backgroundColor: "#FFF" }}
-      digitTxtStyle={{ color: "#1CC625" }}
+      digitStyle={{ backgroundColor: "#D57900" }}
+      digitTxtStyle={{ color: "white" }}
       timeToShow={["S"]}
       timeLabels={{ s: "" }}
     />
