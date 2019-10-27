@@ -18,7 +18,7 @@ const CountdownTimer = props => {
       digitStyle={{ backgroundColor: "#D57900" }}
       digitTxtStyle={{ color: "white" }}
       timeToShow={["S"]}
-      timeLabels={{ s: "" }}
+      timeLabels={{ s: "SS" }}
     />
   );
 };
