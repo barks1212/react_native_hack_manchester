@@ -37,7 +37,7 @@ const handleBarCodeScanned = (scan, setDebounceScanCallback, setProductCallback,
     })
 }
 
-const takePhoto = (photo) => {
+const takePhoto = (photo, setScannedBonusCb, setDisplayBonusCb, setCalsLeftCb) => {
   console.log('---------- PHOTO ---------------', photo)
 
   axios.post('https://supermarketsweep.azurewebsites.net/game/photo',
@@ -49,7 +49,16 @@ const takePhoto = (photo) => {
 
       if (response.data) {
         console.log('------ send photo response ---------', response.data)
-
+      }
+      if (response.data.isBonus) {
+        setScannedBonusCb(response.data)
+        setDisplayBonusCb(true)
+        console.log('I set displayBonus to true')
+        setTimeout(() => {
+          setDisplayBonusCb(false)
+          console.log('I set displayBonus to false')
+        }, 3000)
+        setCalsLeftCb(response.data.caloriesLeft)
       }
     })
     .catch(function (error) {
@@ -73,6 +82,9 @@ export default ShoppingScreen = () => {
   const [debounceScan, setDebounceScan] = useState(false)
   const [timeLeft, setTimeLeft] = useState(300)
   const [calsLeft, setCalsLeft] = useState(2000)
+  const [displayBonus, setDisplayBonus] = useState(false)
+  const [scannedBonus, setScannedBonus] = useState()
+
   const camera = useRef()
 
   useEffect(() => {
@@ -139,8 +151,14 @@ export default ShoppingScreen = () => {
 
 
                 }
+
+                {displayBonus &&
+
+                  <Image style={{ width: 300, height: 300, justifyContent: 'center', alignItems: 'center', borderRadius: 150 }}
+                    source={{ uri: `${scannedBonus.imageUrl}` }} />
+                }
                 <View style={styles.takePhotoButton}>
-                  <Button title='Take Photo'
+                  <Button title='Bonus Item'
                     color="white"
                     accessibilityLabel="Take a photo"
                     onPress={async () => {
@@ -149,7 +167,7 @@ export default ShoppingScreen = () => {
                           base64: true,
                           quality: 0.1
                         });
-                        takePhoto(photo)
+                        takePhoto(photo, setScannedBonus, setDisplayBonus, setCalsLeft)
                       }
                     }}
                   >
