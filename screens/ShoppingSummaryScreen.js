@@ -24,6 +24,10 @@ const getSummary = (gameId, setSummaryCb) => {
     })
 }
 
+const getLeaderBoard = () => {
+  axios.get('https://supermarketsweep.azurewebsites.net/game/leaderboard')
+}
+
 const onPurchase = (gameId) => {
   console.log('hit purchase button: ', gameId)
   // axios.post(`https://supermarketsweep.azurewebsites.net/game/purchase/${gameId}`,

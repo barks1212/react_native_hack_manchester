@@ -63,7 +63,7 @@ const QuizScreen = props => {
           </View>
           <View>
             <CountdownTimer
-              until={60}
+              until={30}
               size={35}
               onFinishCountdown={() =>
                 countdownFinishHandler(correctAnswersTotal)
@@ -75,12 +75,14 @@ const QuizScreen = props => {
     </View>
   );
 };
+//
 
 const styles = StyleSheet.create({
   bottom: {
     flexDirection: "row",
     flex: 1,
     justifyContent: "space-between",
+
     alignItems: "center",
     width: "100%",
     paddingHorizontal: 20
