@@ -84,11 +84,6 @@ const ShoppingSummaryScreen = props => {
   );
 };
 
-ShoppingSummaryScreen.navigationOptions = {
-  headerTitle: "Shopping Summary",
-  headerLeft: null
-};
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,

@@ -1,10 +1,18 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import get from "lodash/get";
 import { View, Text, StyleSheet, Button } from "react-native";
 
 const QuizSummaryScreen = props => {
+  const calories = props.navigation.getParam("calories");
+
+  const gameId = useSelector(state => get(state, "game.gameId"));
   return (
     <View style={styles.screen}>
-      <Text>QuizSummaryScreen</Text>
+      <View style={styles.titleContainer}>
+        <Text style={styles.title}>YOU HAVE {calories} CALORIES TO SPEND</Text>
+      </View>
+      <Text>{gameId}</Text>
       <Button
         title="To Shopping"
         onPress={() => {
@@ -15,16 +23,18 @@ const QuizSummaryScreen = props => {
   );
 };
 
-QuizSummaryScreen.navigationOptions = {
-  headerTitle: "Quiz Summary",
-  headerLeft: null
-};
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: "center",
     alignItems: "center"
+  },
+  titleContainer: {
+    marginVertical: 200
+  },
+  title: {
+    textAlign: "center",
+    fontFamily: "Roboto-bold",
+    fontSize: 22
   }
 });
 
