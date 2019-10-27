@@ -9,7 +9,7 @@ import {
   Alert,
   Platform
 } from "react-native";
-import { useSelector } from 'react-redux'
+import { useSelector } from "react-redux";
 import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
 import debounce from "lodash/debounce";
@@ -51,14 +51,13 @@ const handleBarCodeScanned = (
         //
         console.log("I set display to true");
         setTimeout(() => {
-
           setDisplayProduct(false);
           setIsDonationCb(false);
           console.log("I set display to false");
         }, 3000);
       }
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error);
     });
 };
@@ -93,7 +92,7 @@ const takePhoto = (
         setCalsLeftCb(response.data.caloriesLeft);
       }
     })
-    .catch(function (error) {
+    .catch(function(error) {
       console.log(error);
     });
 };
@@ -109,6 +108,8 @@ const getCameraPermissions = async setCameraPermissionCallback => {
 };
 
 export default ShoppingScreen = props => {
+  const calories = props.navigation.getParam("calories");
+  console.log(calories);
   const type = Camera.Constants.Type.back;
   const [hasCameraPermission, setCameraPermission] = useState();
   const [scanned, setScanned] = useState(false);
@@ -116,14 +117,13 @@ export default ShoppingScreen = props => {
   const [displayProduct, setDisplayProduct] = useState(false);
   const [debounceScan, setDebounceScan] = useState(false);
   const [timeLeft, setTimeLeft] = useState(45);
-  const [calsLeft, setCalsLeft] = useState();
+  const [calsLeft, setCalsLeft] = useState(calories);
   const [displayBonus, setDisplayBonus] = useState(false);
   const [scannedBonus, setScannedBonus] = useState();
   const [donation, setIsDonation] = useState(false);
   // const [isGameOver, setIsGameOver] = useState(false)
   //
-  const gameId = useSelector(state => get(state, 'game.gameId'))
-
+  const gameId = useSelector(state => get(state, "game.gameId"));
 
   // useEffect(() => {
   //   props.navigation.popToTop()
@@ -181,17 +181,19 @@ export default ShoppingScreen = props => {
                 );
             }}
           >
-            <CountDown
-              until={timeLeft}
-              onFinish={() => {
-                console.log('props: ', props)
-                props.navigation.navigate("ShoppingSummary");
-              }}
-              // onFinish={() => props.navigation.navigate("Shopping Summary")}
+            <View style={{ marginVertical: 50 }}>
+              <CountDown
+                until={timeLeft}
+                onFinish={() => {
+                  console.log("props: ", props);
+                  props.navigation.navigate("ShoppingSummary");
+                }}
+                // onFinish={() => props.navigation.navigate("Shopping Summary")}
 
-              size={15}
-              timeToShow={["M", "S"]}
-            />
+                size={15}
+                timeToShow={["M", "S"]}
+              />
+            </View>
             <Text style={styles.calsAndTimerText}>
               {" "}
               Calories left: {calsLeft}{" "}
