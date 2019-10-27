@@ -52,7 +52,7 @@ const QuizScreen = props => {
         </View>
         <View>
           <CountdownTimer
-            until={200}
+            until={3}
             size={35}
             onFinishCountdown={() =>
               countdownFinishHandler(correctAnswersTotal)
