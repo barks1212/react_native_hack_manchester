@@ -237,11 +237,6 @@ export default ShoppingScreen = () => {
 //   }
 // } 
 
-ShoppingScreen.navigationOptions = {
-  headerTitle: "Shopping",
-  headerLeft: null
-};
-
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
