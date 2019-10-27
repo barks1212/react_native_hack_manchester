@@ -1,29 +1,58 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Button } from "react-native";
+import { useSelector } from 'react-redux'
 import get from 'lodash/get'
 import axios from 'axios'
 
+const getSummary = (gameId, setSummaryCb) => {
+  if (!gameId)
+    return
+
+  // axios.post(`https://supermarketsweep.azurewebsites.net/game/finishGame/${gameId}`,
+  axios.post(`https://supermarketsweep.azurewebsites.net/game/finishGame/b5c94b67-5f4b-4a25-a119-82aa3d4c3bae`,
+  )
+    .then((response) => {
+
+      if (response.data) {
+        console.log('------ finishGame response ---------', response.data)
+      }
+
+      setSummaryCb(response.data)
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+}
+
+const getLeaderBoard = () => {
+  axios.get('https://supermarketsweep.azurewebsites.net/game/leaderboard')
+}
+
+const onPurchase = (gameId) => {
+  console.log('hit purchase button: ', gameId)
+  // axios.post(`https://supermarketsweep.azurewebsites.net/game/purchase/${gameId}`,
+  axios.post(`https://supermarketsweep.azurewebsites.net/game/purchase/${gameId}`,
+
+  )
+    .then((response) => {
+      if (response.data) {
+        console.log('------ purchase response ---------', response.data)
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+}
+//
 const ShoppingSummaryScreen = props => {
   const [summary, setSummary] = useState()
   console.log('in summary screen')
-  setSummary(getSummary())
 
-  const getSummary = () => {
-    axios.post('http://localhost:60616/game/finishGame/',
-      {
-        gameId: "ea626bbd-4604-427f-a4eb-0391178157af"
+  const gameId = useSelector(state => get(state, 'game.gameId'))
 
-      })
-      .then((response) => {
-
-        if (response.data) {
-          console.log('------ finishGame response ---------', response.data)
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      })
-  }
+  useEffect(() => {
+    getSummary(gameId, setSummary)
+  }, [gameId])
 
   return (
     <View style={styles.screen}>
@@ -58,29 +87,17 @@ const ShoppingSummaryScreen = props => {
         <Text>Total Spend: {get(summary, 'totalCost')}</Text>
       </>}
 
+      <Button
+        title="Purchase"
+        onPress={() => {
+          onPurchase(gameId)
+
+        }}
+      />
+
 
     </View>
 
-    /*
-    "gameId": "05e75d4c-e148-4e18-9f6e-6242ab75d708",
-  "username": null,
-  "totalCalories": 645,
-  "allowedCalories": 2471,
-  "totalDonatedItems": 4,
-  "basketItems": [
-    {
-      "productName": "Pataks Rogan Josh Paste Pots 2X70g",
-      "quantity": 4,
-      "isDonation": true,
-      "calories": 197,
-      "totalCalories": 645,
-      "totalCost": 9.12,
-      "unitCost": 2.28
-    }
-  ],
-  "totalBonusCalories": 0,
-  "totalBonusItems": 0
-    */
   );
 };
 

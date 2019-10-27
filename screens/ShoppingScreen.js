@@ -9,9 +9,11 @@ import {
   Alert,
   Platform
 } from "react-native";
+import { useSelector } from 'react-redux'
 import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
 import debounce from "lodash/debounce";
+import get from "lodash/get";
 import axios from "axios";
 import CountDown from "react-native-countdown-component";
 import { Audio } from 'expo-av';
@@ -24,7 +26,8 @@ const handleBarCodeScanned = (
   setProductCallback,
   setCalCallback,
   setDisplayProduct,
-  setIsDonationCb
+  setIsDonationCb,
+  gameId
 ) => {
   console.log("--------------- SCANNED ----------------", scan);
   setDebounceScanCallback(true);
@@ -33,7 +36,8 @@ const handleBarCodeScanned = (
 
   axios
     .post("https://supermarketsweep.azurewebsites.net/game/scan", {
-      gameId: "ea626bbd-4604-427f-a4eb-0391178157af",
+      // gameId: "ea626bbd-4604-427f-a4eb-0391178157af",
+      gameId: gameId,
       gtin: `${scan.data}`
     })
     .then(response => {
@@ -48,14 +52,6 @@ const handleBarCodeScanned = (
         //
         console.log("I set display to true");
         setTimeout(() => {
-          //   let blinker = false
-
-          //   setInterval(() => {
-          //     console.log('blinker', blinker)
-          //     blinker = !blinker
-          //     setIsDonationCb(blinker);
-          //     ///
-          //   }, 500)
 
           setDisplayProduct(false);
           setIsDonationCb(false);
@@ -72,13 +68,15 @@ const takePhoto = (
   photo,
   setScannedBonusCb,
   setDisplayBonusCb,
-  setCalsLeftCb
+  setCalsLeftCb,
+  gameId
 ) => {
   console.log("---------- PHOTO ---------------", photo);
 
   axios
     .post("https://supermarketsweep.azurewebsites.net/game/photo", {
-      gameId: "ea626bbd-4604-427f-a4eb-0391178157af",
+      // gameId: "ea626bbd-4604-427f-a4eb-0391178157af",
+      gameId: gameId,
       base64Image: photo.base64
     })
     .then(response => {
@@ -100,6 +98,11 @@ const takePhoto = (
       console.log(error);
     });
 };
+
+// const onGameOver = props => {
+//   console.log("game over");
+
+// };
 
 const getCameraPermissions = async setCameraPermissionCallback => {
   const { status } = await Permissions.askAsync(Permissions.CAMERA);
@@ -131,18 +134,16 @@ export default ShoppingScreen = props => {
   const [scannedProduct, setScannedProduct] = useState({});
   const [displayProduct, setDisplayProduct] = useState(false);
   const [debounceScan, setDebounceScan] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(100);
+  const [timeLeft, setTimeLeft] = useState(45);
   const [calsLeft, setCalsLeft] = useState();
   const [displayBonus, setDisplayBonus] = useState(false);
   const [scannedBonus, setScannedBonus] = useState();
   const [donation, setIsDonation] = useState(false);
   // const [isGameOver, setIsGameOver] = useState(false)
   //
+  const gameId = useSelector(state => get(state, 'game.gameId'))
 
-  const onGameOver = props => {
-    console.log("game over");
-    props.navigation.navigate("Shopping Summary");
-  };
+
   // useEffect(() => {
   //   props.navigation.popToTop()
   // },[isGameOver])
@@ -199,13 +200,17 @@ export default ShoppingScreen = props => {
                   setScannedProduct,
                   setCalsLeft,
                   setDisplayProduct,
-                  setIsDonation
+                  setIsDonation,
+                  gameId
                 );
             }}
           >
             <CountDown
               until={timeLeft}
-              onFinish={() => onGameOver(props)}
+              onFinish={() => {
+                console.log('props: ', props)
+                props.navigation.navigate("ShoppingSummary");
+              }}
               // onFinish={() => props.navigation.navigate("Shopping Summary")}
 
               size={15}
@@ -280,7 +285,8 @@ export default ShoppingScreen = props => {
                           photo,
                           setScannedBonus,
                           setDisplayBonus,
-                          setCalsLeft
+                          setCalsLeft,
+                          gameId
                         );
                       }
                     }}

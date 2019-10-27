@@ -37,8 +37,7 @@ const Question = props => {
 const styles = StyleSheet.create({
   screen: {
     alignItems: "center",
-    width: Dimensions.get("window").width,
-    backgroundColor: "yellow"
+    width: Dimensions.get("window").width
   },
   questionWrapper: {
     marginTop: 50,
@@ -46,18 +45,21 @@ const styles = StyleSheet.create({
     width: "90%",
     justifyContent: "center",
     minHeight: 150,
-    backgroundColor: "green"
+    backgroundColor: "#D57900",
+    borderRadius: 25,
+    borderWidth: 2,
+    borderColor: "black"
   },
   question: {
-    fontFamily: "Roboto-bold",
+    fontFamily: "Raleway-bold",
     textAlign: "center",
-    fontSize: 22
+    fontSize: 22,
+    color: "white"
   },
   answerContainer: {
     marginTop: 30,
     flexDirection: "row",
     flexWrap: "wrap",
-    backgroundColor: "purple",
     width: "100%"
   }
 });

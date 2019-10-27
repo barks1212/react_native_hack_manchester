@@ -1,7 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { View, StyleSheet, Text } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  ImageBackground,
+  Dimensions
+} from "react-native";
 import CountdownTimer from "../components/Countdown";
 import Question from "../components/Question";
 import { quizData } from "../quizData/quizData";
@@ -43,40 +49,55 @@ const QuizScreen = props => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "red" }}>
-      <Question question={question} setAnswer={setAnswer} />
-      <View style={styles.bottom}>
-        <View>
-          <Text style={styles.text}>{`${correctAnswersTotal *
-            250} Calories`}</Text>
+    <View style={{ flex: 1 }}>
+      <ImageBackground
+        source={require("../assets/background.png")}
+        style={styles.bgImg}
+        resizeMode="cover"
+      >
+        <Question question={question} setAnswer={setAnswer} />
+        <View style={styles.bottom}>
+          <View>
+            <Text style={styles.text}>{`${correctAnswersTotal *
+              250} Calories`}</Text>
+          </View>
+          <View>
+            <CountdownTimer
+              until={60}
+              size={60}
+              onFinishCountdown={() =>
+                countdownFinishHandler(correctAnswersTotal)
+              }
+            />
+          </View>
         </View>
-        <View>
-          <CountdownTimer
-            until={3}
-            size={35}
-            onFinishCountdown={() =>
-              countdownFinishHandler(correctAnswersTotal)
-            }
-          />
-        </View>
-      </View>
+      </ImageBackground>
     </View>
   );
 };
+//
 
 const styles = StyleSheet.create({
   bottom: {
     flexDirection: "row",
-    flex: 1,
     justifyContent: "space-between",
+
     alignItems: "center",
     width: "100%",
-    backgroundColor: "blue",
-    paddingHorizontal: 20
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderTopWidth: 2,
+    borderTopColor: "black"
+  },
+  bgImg: {
+    width: Dimensions.get("window").width,
+    height: Dimensions.get("window").height,
+    justifyContent: "center",
+    alignItems: "center"
   },
   text: {
-    fontFamily: "Roboto-bold",
-    fontSize: 22
+    fontFamily: "Caviar-bold",
+    fontSize: 30
   }
 });
 
